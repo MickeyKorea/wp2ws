@@ -6,7 +6,7 @@
 
  ---
 
- [Project B]()
+ [Project B](https://mickeykorea.github.io/wp2ws/Project_B/)
  Celestial Odyssey: Mickey Universe
 
  [Project C]()
