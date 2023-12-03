@@ -115,6 +115,7 @@ function setupThree() {
     // crate group to control the particles and lines together
     group = new THREE.Group();
     scene.add(group);
+    group.position.z = -170;
 
     // point
     const pMaterial = new THREE.PointsMaterial({
@@ -171,6 +172,7 @@ function setupThree() {
         //have to use vertexColors here instead of just color here to use the color attribute
         vertexColors: true,
         blending: THREE.AdditiveBlending,
+        depthTest: false,
         transparent: true
     });
 
@@ -184,7 +186,7 @@ function setupThree() {
 
     //camera height gui
     let cameraControls = gui.addFolder('Camera Position');
-    cameraControls.add(camera.position, 'z', 70, 1000).name('Height').listen().step(1);
+    cameraControls.add(camera.position, 'z', 0, 1000).name('Height').listen().step(1);
     // cameraControls.open();
 
     // lights
