@@ -13,7 +13,7 @@ function initThree() {
     const near = 1;
     const far = 1000;
     camera = new THREE.PerspectiveCamera(fov, aspectRatio, near, far);
-    camera.position.z = 200;
+    // camera.position.z = 0;
     camera.rotation.x = Math.PI / 2;
 
     renderer = new THREE.WebGLRenderer();

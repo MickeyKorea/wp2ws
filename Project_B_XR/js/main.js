@@ -180,7 +180,7 @@ function setupThree() {
     initGUI();
 
     //hdi background
-    bg = getIcosahedron();
+    // bg = getIcosahedron();
 
     //camera height gui
     let cameraControls = gui.addFolder('Camera Position');
@@ -211,6 +211,7 @@ function setupThree() {
 
     earth = getEarth();
     earth.scale.set(30, 30, 30);
+    earth.position.z = -150;
 
     //Sun
     // sunTexture1 = new THREE.TextureLoader().load('assets/sun_dis.png');
@@ -247,28 +248,28 @@ function setupThree() {
 
 //hdr background mappin
 let hdr;
-function getIcosahedron() {
-    hdr = new RGBELoader().load(
-        // "./assets/space.hdr",
-        "https://cdn.glitch.me/b363d010-e028-4d9b-b0e2-29723bc75d28/space.hdr?v=1701258480859",
-        () => {
-            hdr.mapping = THREE.EquirectangularReflectionMapping;
-        }
-    );
+// function getIcosahedron() {
+//     hdr = new RGBELoader().load(
+//         // "./assets/space.hdr",
+//         "https://cdn.glitch.me/b363d010-e028-4d9b-b0e2-29723bc75d28/space.hdr?v=1701258480859",
+//         () => {
+//             hdr.mapping = THREE.EquirectangularReflectionMapping;
+//         }
+//     );
 
-    const geometry = new THREE.IcosahedronGeometry(1, 0);
-    const material = new THREE.MeshPhysicalMaterial({
-        envMap: hdr
-    });
-    const mesh = new THREE.Mesh(geometry, material);
-    scene.add(mesh);
+//     const geometry = new THREE.IcosahedronGeometry(1, 0);
+//     const material = new THREE.MeshPhysicalMaterial({
+//         envMap: hdr
+//     });
+//     const mesh = new THREE.Mesh(geometry, material);
+//     scene.add(mesh);
 
-    scene.background = hdr;
+//     scene.background = hdr;
 
-    // let sphere = getSphere();
+//     // let sphere = getSphere();
 
-    return mesh;
-}
+//     return mesh;
+// }
 
 function updateThree() {
     constellationBox.update();
