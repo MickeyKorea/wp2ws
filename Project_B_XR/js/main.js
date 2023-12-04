@@ -115,7 +115,7 @@ function setupThree() {
     // crate group to control the particles and lines together
     group = new THREE.Group();
     scene.add(group);
-    group.position.z = -200;
+    group.position.z = -350;
 
     // point
     const pMaterial = new THREE.PointsMaterial({
@@ -213,7 +213,7 @@ function setupThree() {
 
     earth = getEarth();
     earth.scale.set(30, 30, 30);
-    earth.position.z = -180;
+    earth.position.z = -300;
 
     //Sun
     // sunTexture1 = new THREE.TextureLoader().load('assets/sun_dis.png');
