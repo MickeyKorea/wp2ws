@@ -8,11 +8,13 @@ function setupWebXR() {
   controller1 = renderer.xr.getController(0);
   controller1.addEventListener('selectstart', onSelectStart); // when the trigger is pressed
   controller1.addEventListener('selectend', onSelectEnd); // when the trigger is released
+  controller1.addEventListener("axischange", onAxisChange); // when the joystick is moved
   scene.add(controller1);
 
   controller2 = renderer.xr.getController(1);
   controller2.addEventListener('selectstart', onSelectStart);
   controller2.addEventListener('selectend', onSelectEnd);
+  controller2.addEventListener("axischange", onAxisChange);
   scene.add(controller2);
 
   // controller grip
@@ -78,4 +80,28 @@ function onSelectEnd(event) {
 
   }
 
+}
+
+function onAxisChange(event) {
+  // Check if the axis change is on the joystick
+  const joystickThreshold = 0.5; // You can adjust this threshold
+  const xAxis = event.axes[2]; // X-axis of the joystick
+  const yAxis = event.axes[3]; // Y-axis of the joystick
+
+  // Check if the joystick is moved beyond the threshold
+  if (Math.abs(xAxis) > joystickThreshold || Math.abs(yAxis) > joystickThreshold) {
+    // Determine the direction based on the joystick position
+    if (xAxis > joystickThreshold) {
+      // Joystick moved right
+    } else if (xAxis < -joystickThreshold) {
+      // Joystick moved left
+    }
+
+    if (yAxis > joystickThreshold) {
+      // Joystick moved down
+    } else if (yAxis < -joystickThreshold) {
+      // Joystick moved up
+      text_rotate = true;
+    }
+  }
 }
