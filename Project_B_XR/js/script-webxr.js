@@ -1,6 +1,7 @@
 let controller1, controller2;
 let controllerGrip1, controllerGrip2;
 let movementSpeed = 50;
+let triggerPressed = false;
 
 function setupWebXR() {
   renderer.xr.enabled = true;
@@ -60,10 +61,10 @@ document.addEventListener('keydown', function (event) {
 function onSelectStart(event) {
 
   const controller = event.target;
+  triggerPressed = true;
 
-  // Adjust the star(group) z position when the trigger is pressed
-  group.position.z += 0.1 * movementSpeed;
-  earth.position.z += 0.1 * movementSpeed;
+  // group.position.z += 0.1 * movementSpeed;
+  // earth.position.z += 0.1 * movementSpeed;
 
   const intersections = getIntersections(controller);
 
@@ -86,9 +87,10 @@ function onSelectStart(event) {
 function onSelectEnd(event) {
 
   const controller = event.target;
+  triggerPressed = false;
 
-  group.position.z -= 0.1 * movementSpeed;
-  earth.position.z -= 0.1 * movementSpeed;
+  // group.position.z -= 0.1 * movementSpeed;
+  // earth.position.z -= 0.1 * movementSpeed;
 
   if (controller.userData.selected !== undefined) {
 
@@ -101,6 +103,17 @@ function onSelectEnd(event) {
   }
 
 }
+
+function animate() {
+  if (triggerPressed) {
+    group.position.z += 0.1 * movementSpeed;
+    earth.position.z += 0.1 * movementSpeed;
+  }
+
+  requestAnimationFrame(animate);
+}
+
+animate();
 
 function onAxisChange(event) {
   // Check if the axis change is on the joystick
