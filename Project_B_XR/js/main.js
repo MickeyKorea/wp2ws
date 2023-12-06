@@ -267,7 +267,7 @@ function getIcosahedron() {
     const mesh = new THREE.Mesh(geometry, material);
     scene.add(mesh);
 
-    // scene.background = hdr;
+    scene.background = hdr;
 
     // let sphere = getSphere();
 
@@ -286,10 +286,24 @@ function updateThree() {
         movementSpeed = lerp(movementSpeed, 1, 0.01);
     }
 
-    if (group) {
+    if (group && group.position.z <= 350) {
         group.position.z += (movementSpeed ** 2) * 0.0001;
         // console.log(group.position.z);
+    } else {
+        if (movementSpeed > 0) {
+            movementSpeed *= -1;
+        }
+        group.position.z += (movementSpeed ** 2) * 0.0001;
+        console.log(group.position.z);
     }
+
+    if (group.position.z >= 350) {
+        //reverse the direction of the movement
+        movementSpeed *= -1;
+        // group.position.z -= (movementSpeed ** 2) * 0.01;
+        group.position.z = -350;
+    }
+    // console.log(group.position.z);
 
     //ziggle ziggle
     group.rotation.z = sin(frame * 0.01) * 0.1;
