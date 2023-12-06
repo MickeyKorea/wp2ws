@@ -4,7 +4,7 @@ let particles;
 let pointCloud;
 let particlePositions;
 let linesMesh;
-let group;
+let group = new THREE.Group();
 
 const maxParticleCount = 1000;
 let particleCount = 50;
@@ -72,7 +72,8 @@ class ConstellationBox {
         });
 
         this.stars = new THREE.Points(this.starGeo, starMaterial);
-        scene.add(this.stars);
+        //scene.add(this.stars);
+        group.add(this.stars);
     }
 
     update() {
@@ -114,7 +115,7 @@ function setupThree() {
     constellationBox.setup();
 
     // crate group to control the particles and lines together
-    group = new THREE.Group();
+
     scene.add(group);
     group.position.z = -350;
 
@@ -266,7 +267,7 @@ function getIcosahedron() {
     const mesh = new THREE.Mesh(geometry, material);
     scene.add(mesh);
 
-    scene.background = hdr;
+    // scene.background = hdr;
 
     // let sphere = getSphere();
 
@@ -278,15 +279,21 @@ let movementSpeed = 1;
 function updateThree() {
     constellationBox.update();
 
-    if (triggerPressed) {
+    if (triggerPressed || keyIsPressed) {
         movementSpeed++;
+
     } else {
         movementSpeed = lerp(movementSpeed, 1, 0.01);
     }
 
     if (group) {
         group.position.z += (movementSpeed ** 2) * 0.0001;
+        // console.log(group.position.z);
     }
+
+    //ziggle ziggle
+    group.rotation.z = sin(frame * 0.01) * 0.1;
+    group.rotation.y = sin(frame * 0.015) * 0.05;
 
     for (let l of lights) {
         // l.move();
