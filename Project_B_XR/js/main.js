@@ -112,6 +112,20 @@ function setupThree() {
 
     constellationBox.setup();
 
+    //fly control navigate controls
+    clock = new THREE.Clock();
+    controls = new FlyControls(camera, renderer.domElement);
+    controls.movementSpeed = 100;
+    controls.rollSpeed = 0.25;
+    controls.autoForward = false;
+    controls.dragToLook = true;
+
+    //navigate controls gui
+    let navigateControls = gui.addFolder('Navigate Controls');
+    navigateControls.add(controls, 'dragToLook').name('Mouse Steering');
+    navigateControls.add(controls, 'movementSpeed', 0, 200).name('Move Speed');
+    navigateControls.open();
+
     // crate group to control the particles and lines together
     group = new THREE.Group();
     scene.add(group);
@@ -275,6 +289,11 @@ function getIcosahedron() {
 
 function updateThree() {
     constellationBox.update();
+
+    //fly controls
+    const delta = clock.getDelta();
+    controls.update(delta);
+    // camera.position.y = 0;
 
     for (let l of lights) {
         // l.move();
