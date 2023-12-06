@@ -1,6 +1,5 @@
 let controller1, controller2;
 let controllerGrip1, controllerGrip2;
-let movementSpeed = 50;
 let triggerPressed = false;
 
 function setupWebXR() {
@@ -103,17 +102,6 @@ function onSelectEnd(event) {
   }
 
 }
-
-function animate() {
-  if (triggerPressed) {
-    group.position.z += 0.1 * movementSpeed;
-    earth.position.z += 0.1 * movementSpeed;
-  }
-
-  requestAnimationFrame(animate);
-}
-
-animate();
 
 function onAxisChange(event) {
   // Check if the axis change is on the joystick

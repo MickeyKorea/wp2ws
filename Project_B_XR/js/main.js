@@ -4,6 +4,7 @@ let particles;
 let pointCloud;
 let particlePositions;
 let linesMesh;
+let group;
 
 const maxParticleCount = 1000;
 let particleCount = 50;
@@ -212,6 +213,7 @@ function setupThree() {
     earth = getEarth();
     earth.scale.set(30, 30, 30);
     earth.position.z = -300;
+    group.add(earth);
 
     //Sun
     // sunTexture1 = new THREE.TextureLoader().load('assets/sun_dis.png');
@@ -271,8 +273,20 @@ function getIcosahedron() {
     return mesh;
 }
 
+let movementSpeed = 1;
+
 function updateThree() {
     constellationBox.update();
+
+    if (triggerPressed) {
+        movementSpeed++;
+    } else {
+        movementSpeed = lerp(movementSpeed, 1, 0.01);
+    }
+
+    if (group) {
+        group.position.z += (movementSpeed ** 2) * 0.0001;
+    }
 
     for (let l of lights) {
         // l.move();
@@ -382,8 +396,6 @@ function getEarth() {
         // envMap: hdr
     });
     const sphere = new THREE.Mesh(geometry, material);
-    scene.add(sphere);
-
     return sphere;
 }
 
