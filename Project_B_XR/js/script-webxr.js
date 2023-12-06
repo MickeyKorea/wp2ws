@@ -48,6 +48,12 @@ function onSelectStart(event) {
 
   const controller = event.target;
 
+  const movementSpeed = 50;
+
+  // Adjust the group's z position when the trigger is pressed
+  // group.position.z += (controller.userData.targetRayMode === 'screen' ? 1 : -1) * movementSpeed;
+  group.position.z = zPosition !== undefined ? zPosition : group.position.z + (controller.userData.targetRayMode === 'screen' ? 1 : -1) * movementSpeed;
+
   const intersections = getIntersections(controller);
 
   if (intersections.length > 0) {
