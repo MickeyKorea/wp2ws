@@ -279,6 +279,7 @@ let movementSpeed = 1;
 function updateThree() {
     constellationBox.update();
 
+    //movement
     if (triggerPressed || keyIsPressed) {
         movementSpeed++;
 
@@ -305,7 +306,7 @@ function updateThree() {
     }
     // console.log(group.position.z);
 
-    //ziggle ziggle
+    //ziggle ziggle effect
     group.rotation.z = sin(frame * 0.01) * 0.1;
     group.rotation.y = sin(frame * 0.015) * 0.05;
 
