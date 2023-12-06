@@ -1,5 +1,6 @@
 let controller1, controller2;
 let controllerGrip1, controllerGrip2;
+let movementSpeed = 50;
 
 function setupWebXR() {
   renderer.xr.enabled = true;
@@ -44,14 +45,25 @@ function setupWebXR() {
   raycaster = new THREE.Raycaster();
 }
 
+document.addEventListener('keydown', function (event) {
+  // Check if the 'g' key was pressed
+  if (event.key === 'g') {
+    // Change the z position of the group
+    group.position.z += 0.1 * movementSpeed;
+    earth.position.z += 0.1 * movementSpeed;
+  } else if (event.key === 'h') {
+    group.position.z -= 0.1 * movementSpeed;
+    earth.position.z -= 0.1 * movementSpeed;
+  }
+});
+
 function onSelectStart(event) {
 
   const controller = event.target;
 
-  const movementSpeed = 50;
-
-  // Adjust the group's z position when the trigger is pressed
+  // Adjust the star(group) z position when the trigger is pressed
   group.position.z += 0.1 * movementSpeed;
+  earth.position.z += 0.1 * movementSpeed;
 
   const intersections = getIntersections(controller);
 
@@ -75,6 +87,9 @@ function onSelectEnd(event) {
 
   const controller = event.target;
 
+  group.position.z -= 0.1 * movementSpeed;
+  earth.position.z -= 0.1 * movementSpeed;
+
   if (controller.userData.selected !== undefined) {
 
     const object = controller.userData.selected;
@@ -89,7 +104,7 @@ function onSelectEnd(event) {
 
 function onAxisChange(event) {
   // Check if the axis change is on the joystick
-  const joystickThreshold = 0.5; // You can adjust this threshold
+  const joystickThreshold = 0.5;
   const xAxis = event.axes[2]; // X-axis of the joystick
   const yAxis = event.axes[3]; // Y-axis of the joystick
 
