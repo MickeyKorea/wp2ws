@@ -302,7 +302,7 @@ function updateThree() {
         //reverse the direction of the movement
         movementSpeed *= -1;
         // group.position.z -= (movementSpeed ** 2) * 0.01;
-        group.position.z = -400;
+        group.position.z = -420;
     }
     // console.log(group.position.z);
 
