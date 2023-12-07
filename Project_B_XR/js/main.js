@@ -227,7 +227,7 @@ function setupThree() {
 
     //Moon
     // moonTexture1 = new THREE.TextureLoader().load('assets/moon_dis.png');
-    moonTexture2 = new THREE.TextureLoader().load('assets/moon.jpg');
+    moonTexture2 = new THREE.TextureLoader().load('assets/mooon.jpg');
     // moonTexture1.colorSpace = THREE.SRGBColorSpace;
     moonTexture2.colorSpace = THREE.SRGBColorSpace;
 
