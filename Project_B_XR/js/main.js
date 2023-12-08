@@ -23,10 +23,11 @@ const effectController = {
 let lights = [];
 //texture for Earth and its displacement(to make it look more 3d)
 let bg, light;
-let earth, sun, moon;
+let earth, mars, moon, jupiter;
 let earthTexture1, earthTexture2;
-let sunTexture1, sunTexture2;
+let marsTexture1, marsTexture2;
 let moonTexture1, moonTexture2;
+let jupiterTexture1, jupiterTexture2;
 
 class ConstellationBox {
     constructor() {
@@ -122,7 +123,7 @@ function setupThree() {
     // point
     const pMaterial = new THREE.PointsMaterial({
         color: 0xFFFFFF,
-        size: 2,
+        size: 0.5,
         blending: THREE.AdditiveBlending,
         transparent: true,
         sizeAttenuation: false
@@ -180,6 +181,7 @@ function setupThree() {
     group.add(linesMesh);
 
     initGUI();
+    gui.close();
 
     //hdi background
     bg = getIcosahedron();
@@ -216,37 +218,39 @@ function setupThree() {
     earth.position.z = -300;
     group.add(earth);
 
-    //Sun
-    // sunTexture1 = new THREE.TextureLoader().load('assets/sun_dis.png');
-    sunTexture2 = new THREE.TextureLoader().load('assets/sun.jpg');
-    // sunTexture1.colorSpace = THREE.SRGBColorSpace;
-    sunTexture2.colorSpace = THREE.SRGBColorSpace;
-
-    // sun = getSun();
-    // sun.scale.set(30, 30, 30);
-
     //Moon
-    // moonTexture1 = new THREE.TextureLoader().load('assets/moon_dis.png');
-    moonTexture2 = new THREE.TextureLoader().load('assets/mooon.jpg');
-    // moonTexture1.colorSpace = THREE.SRGBColorSpace;
+    moonTexture2 = new THREE.TextureLoader().load('assets/moon.jpg');
     moonTexture2.colorSpace = THREE.SRGBColorSpace;
-
-    // moon = getMoon();
     const moonGeometry = new THREE.SphereGeometry(0.3, 360, 360);
 
     const moonMaterial = new THREE.MeshStandardMaterial({
         side: THREE.DoubleSide,
         map: moonTexture2,
-        // displacementMap: moonTexture1,
-        // displacementScale: 0.02,
     });
     const moon = new THREE.Mesh(moonGeometry, moonMaterial);
     earth.add(moon);
     moon.position.x = 3;
     moon.rotation.x += 0.001;
-    // moon.scale.set(10, 10, 10);
-    // moon.position.x += 70;
-    // moon.position.y += 40;
+
+    //Mars
+    marsTexture2 = new THREE.TextureLoader().load('assets/mars.jpg');
+    marsTexture2.colorSpace = THREE.SRGBColorSpace;
+
+    mars = getMars();
+    mars.scale.set(30, 30, 30);
+    mars.position.x = 150;
+    mars.position.z = -300;
+    group.add(mars);
+
+    //Junpiter
+    jupiterTexture2 = new THREE.TextureLoader().load('assets/jupiter.jpg');
+    jupiterTexture2.colorSpace = THREE.SRGBColorSpace;
+
+    jupiter = getJupiter();
+    jupiter.scale.set(30, 30, 30);
+    jupiter.position.x = -200;
+    jupiter.position.z = -1000;
+    group.add(jupiter);
 }
 
 //hdr background mappin
@@ -298,7 +302,7 @@ function updateThree() {
         console.log(group.position.z);
     }
 
-    if (group.position.z >= 350) {
+    if (group.position.z >= 400) {
         //reverse the direction of the movement
         movementSpeed *= -1;
         // group.position.z -= (movementSpeed ** 2) * 0.01;
@@ -421,30 +425,25 @@ function getEarth() {
     return sphere;
 }
 
-function getSun() {
-    const geometry = new THREE.SphereGeometry(1, 360, 360);
+function getMars() {
+    const geometry = new THREE.SphereGeometry(0.6, 360, 360);
 
-    //sun displacement mapping
+    //mars displacement mapping
     const material = new THREE.MeshStandardMaterial({
         side: THREE.DoubleSide,
-        map: sunTexture2,
-        // displacementMap: sunTexture1,
-        // displacementScale: 0.02,
+        map: marsTexture2,
     });
     const sphere = new THREE.Mesh(geometry, material);
     scene.add(sphere);
     return sphere;
 }
 
-//since I already created a moon above, the function below is not used
-function getMoon() {
-    const geometry = new THREE.SphereGeometry(1, 360, 360);
+function getJupiter() {
+    const geometry = new THREE.SphereGeometry(5, 360, 360);
 
     const material = new THREE.MeshStandardMaterial({
         side: THREE.DoubleSide,
-        map: moonTexture2,
-        // displacementMap: moonTexture1,
-        // displacementScale: 0.02,
+        map: jupiterTexture2,
     });
     const sphere = new THREE.Mesh(geometry, material);
     scene.add(sphere);
@@ -511,7 +510,6 @@ function intersectObjects(controller) {
     const intersections = getIntersections(controller);
 
     if (intersections.length > 0) {
-
         const intersection = intersections[0];
 
         const object = intersection.object;
@@ -519,22 +517,14 @@ function intersectObjects(controller) {
         intersected.push(object);
 
         line.scale.z = intersection.distance;
-
     } else {
-
         line.scale.z = 5;
-
     }
-
 }
 
 function cleanIntersected() {
-
     while (intersected.length) {
-
         const object = intersected.pop();
         object.material.emissive.r = 0;
-
     }
-
 }
