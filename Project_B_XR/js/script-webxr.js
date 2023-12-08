@@ -65,19 +65,19 @@ function onSelectStart(event) {
   // group.position.z += 0.1 * movementSpeed;
   // earth.position.z += 0.1 * movementSpeed;
 
-  const intersections = getIntersections(controller);
+  // const intersections = getIntersections(controller);
 
-  if (intersections.length > 0) {
+  // if (intersections.length > 0) {
 
-    const intersection = intersections[0];
+  //   const intersection = intersections[0];
 
-    const object = intersection.object;
-    object.material.emissive.b = 1;
-    // controller.attach(object);
+  //   const object = intersection.object;
+  //   object.material.emissive.b = 1;
+  //   // controller.attach(object);
 
-    // controller.userData.selected = object;
+  //   // controller.userData.selected = object;
 
-  }
+  // }
 
   controller.userData.targetRayMode = event.data.targetRayMode;
 
