@@ -291,7 +291,7 @@ function updateThree() {
         movementSpeed = lerp(movementSpeed, 1, 0.01);
     }
 
-    if (group && group.position.z <= 350) {
+    if (group && group.position.z <= 400) {
         group.position.z += (movementSpeed ** 2) * 0.0001;
         // console.log(group.position.z);
     } else {
