@@ -263,6 +263,13 @@ function getIcosahedron() {
             hdr.mapping = THREE.EquirectangularReflectionMapping;
         }
     );
+    // hdr = new THREE.TextureLoader().load(
+    //     "./assets/space.jpg",
+    //     (texture) => {
+    //         texture.mapping = THREE.EquirectangularReflectionMapping; // Set the mapping
+    //         scene.background = texture; // Set the scene background to the texture
+    //     }
+    // );
 
     const geometry = new THREE.IcosahedronGeometry(1, 0);
     const material = new THREE.MeshPhysicalMaterial({
