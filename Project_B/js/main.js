@@ -174,14 +174,14 @@ function setupThree() {
     linesMesh = new THREE.LineSegments(geometry, material);
     group.add(linesMesh);
 
-    initGUI();
+    //initGUI();
 
     //hdi background
     bg = getIcosahedron();
 
     //camera height gui
-    let cameraControls = gui.addFolder('Camera Position');
-    cameraControls.add(camera.position, 'z', 70, 1000).name('Height').listen().step(1);
+    //let cameraControls = gui.addFolder('Camera Position');
+    //cameraControls.add(camera.position, 'z', 70, 1000).name('Height').listen().step(1);
     // cameraControls.open();
 
     // lights
@@ -190,12 +190,12 @@ function setupThree() {
     scene.add(ambiLight);
 
     //ambient light gui
-    let folderAmbiLight = gui.addFolder("AmbientLight");
-    folderAmbiLight.add(ambiLight, "visible");
-    folderAmbiLight.add(ambiLight, "intensity", 0.0, 5.0);
-    folderAmbiLight.add(ambiLight.color, "r", 0.0, 1.0);
-    folderAmbiLight.add(ambiLight.color, "g", 0.0, 1.0);
-    folderAmbiLight.add(ambiLight.color, "b", 0.0, 1.0);
+    // let folderAmbiLight = gui.addFolder("AmbientLight");
+    // folderAmbiLight.add(ambiLight, "visible");
+    // folderAmbiLight.add(ambiLight, "intensity", 0.0, 5.0);
+    // folderAmbiLight.add(ambiLight.color, "r", 0.0, 1.0);
+    // folderAmbiLight.add(ambiLight.color, "g", 0.0, 1.0);
+    // folderAmbiLight.add(ambiLight.color, "b", 0.0, 1.0);
 
     light = getLight();
     light.position.set(0, 5, 10);

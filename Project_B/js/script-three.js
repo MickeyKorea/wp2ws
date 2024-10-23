@@ -23,12 +23,14 @@ function initThree() {
     container.appendChild(renderer.domElement);
 
     controls = new OrbitControls(camera, renderer.domElement);
+    controls.minDistance = 70;  // Prevent getting inside the Earth
+    controls.maxDistance = 400; // Limit how far out the user can zoom
 
-    gui = new dat.GUI();
+    //gui = new dat.GUI();
 
-    stats = new Stats();
-    stats.showPanel(0); // 0: fps, 1: ms, 2: mb, 3+: custom
-    document.body.appendChild(stats.domElement);
+    // stats = new Stats();
+    // stats.showPanel(0); // 0: fps, 1: ms, 2: mb, 3+: custom
+    // document.body.appendChild(stats.domElement);
 
     setupThree();
 
@@ -38,7 +40,7 @@ function initThree() {
 
 function animate() {
     requestAnimationFrame(animate);
-    stats.update();
+    // stats.update();
     time = performance.now();
     frame++;
 

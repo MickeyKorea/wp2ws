@@ -310,7 +310,7 @@ function updateThree() {
     }
     // console.log(group.position.z);
 
-    //ziggle ziggle effect
+    //wiggle effect
     group.rotation.z = sin(frame * 0.01) * 0.1;
     group.rotation.y = sin(frame * 0.015) * 0.05;
 
