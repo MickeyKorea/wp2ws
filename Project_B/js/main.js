@@ -412,35 +412,35 @@ function getEarth() {
     return sphere;
 }
 
-function getSun() {
-    const geometry = new THREE.SphereGeometry(1, 360, 360);
+// function getSun() {
+//     const geometry = new THREE.SphereGeometry(1, 360, 360);
 
-    //sun displacement mapping
-    const material = new THREE.MeshStandardMaterial({
-        side: THREE.DoubleSide,
-        map: sunTexture2,
-        // displacementMap: sunTexture1,
-        // displacementScale: 0.02,
-    });
-    const sphere = new THREE.Mesh(geometry, material);
-    scene.add(sphere);
-    return sphere;
-}
+//     //sun displacement mapping
+//     const material = new THREE.MeshStandardMaterial({
+//         side: THREE.DoubleSide,
+//         map: sunTexture2,
+//         // displacementMap: sunTexture1,
+//         // displacementScale: 0.02,
+//     });
+//     const sphere = new THREE.Mesh(geometry, material);
+//     scene.add(sphere);
+//     return sphere;
+// }
 
 //since I already created a moon above, the function below is not used
-function getMoon() {
-    const geometry = new THREE.SphereGeometry(1, 360, 360);
+// function getMoon() {
+//     const geometry = new THREE.SphereGeometry(1, 360, 360);
 
-    const material = new THREE.MeshStandardMaterial({
-        side: THREE.DoubleSide,
-        map: moonTexture2,
-        // displacementMap: moonTexture1,
-        // displacementScale: 0.02,
-    });
-    const sphere = new THREE.Mesh(geometry, material);
-    scene.add(sphere);
-    return sphere;
-}
+//     const material = new THREE.MeshStandardMaterial({
+//         side: THREE.DoubleSide,
+//         map: moonTexture2,
+//         // displacementMap: moonTexture1,
+//         // displacementScale: 0.02,
+//     });
+//     const sphere = new THREE.Mesh(geometry, material);
+//     scene.add(sphere);
+//     return sphere;
+// }
 
 function getLight() {
     const light = new THREE.DirectionalLight(0xfff0dd, 1);

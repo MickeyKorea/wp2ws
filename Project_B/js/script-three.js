@@ -1,4 +1,4 @@
-console.log("three.js Version: " + THREE.REVISION);
+// console.log("three.js Version: " + THREE.REVISION);
 
 let container, gui, stats;
 let scene, camera, renderer;
