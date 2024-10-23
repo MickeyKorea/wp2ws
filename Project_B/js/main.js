@@ -27,6 +27,15 @@ let earthTexture1, earthTexture2;
 let sunTexture1, sunTexture2;
 let moonTexture1, moonTexture2;
 
+let mouseX = 0;
+let mouseY = 0;
+let windowHalfX = window.innerWidth / 2;
+let windowHalfY = window.innerHeight / 2;
+let targetRotationX = 0;
+let targetRotationY = 0;
+const rotationSpeed = 0.05;
+const autoRotationSpeed = 0.05;
+
 class ConstellationBox {
     constructor() {
         this.stars = null;
@@ -108,6 +117,8 @@ const constellationBox = new ConstellationBox();
 
 function setupThree() {
     constellationBox.setup();
+    document.addEventListener('mousemove', onMouseMove, false);
+    window.addEventListener('resize', onWindowResize, false);
 
     // crate group to control the particles and lines together
     group = new THREE.Group();
@@ -275,10 +286,21 @@ function updateThree() {
         l.update();
     }
 
-    earth.rotation.x += 0.002;
-    earth.rotation.z += 0.002;
-    earth.rotateY(0.002);
+    //rotation without mouse interaction
+    // earth.rotation.x += 0.002;
+    // earth.rotation.z += 0.002;
+    // earth.rotateY(0.002);
+
+    //auto rotation
+    let autoRotationY = earth.rotation.y + autoRotationSpeed;
     // moon.rotation.x += 0.001;
+
+    // Calculate based on mouse position
+    targetRotationY = mouseX * 0.3;
+    targetRotationX = -mouseY * 0.3;
+
+    earth.rotation.y += (autoRotationY + targetRotationY - earth.rotation.y) * rotationSpeed;
+    earth.rotation.x += (targetRotationX - earth.rotation.x) * rotationSpeed;
 
     let vertexpos = 0;
     let colorpos = 0;
@@ -437,4 +459,14 @@ function initGUI() {
         particles.setDrawRange(0, particleCount);
     });
     // folderStars.open();
+}
+
+function onMouseMove(event) {
+    mouseX = (event.clientX - windowHalfX) / windowHalfX;
+    mouseY = (event.clientY - windowHalfY) / windowHalfY;
+}
+
+function onWindowResize() {
+    windowHalfX = window.innerWidth / 2;
+    windowHalfY = window.innerHeight / 2;
 }
