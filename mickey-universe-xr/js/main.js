@@ -258,7 +258,8 @@ let hdr;
 function getIcosahedron() {
     hdr = new RGBELoader().load(
         // "./assets/space.hdr",
-        "https://cdn.glitch.me/b363d010-e028-4d9b-b0e2-29723bc75d28/space.hdr?v=1701258480859",
+        "https://cdn.glitch.me/d1258780-da78-4d7e-9961-a8cb9ca13efc/space.hdr?v=1729681032066",
+        // "https://cdn.glitch.me/b363d010-e028-4d9b-b0e2-29723bc75d28/space.hdr?v=1701258480859",
         () => {
             hdr.mapping = THREE.EquirectangularReflectionMapping;
         }
