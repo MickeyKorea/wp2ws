@@ -22,7 +22,7 @@ const effectController = {
 let lights = [];
 //texture for Earth and its displacement(to make it look more 3d)
 let bg, light;
-let earth, sun, moon;
+let earth, atmosphere;
 let earthTexture1, earthTexture2;
 let sunTexture1, sunTexture2;
 let moonTexture1, moonTexture2;
@@ -220,6 +220,8 @@ function setupThree() {
     earth = getEarth();
     earth.scale.set(30, 30, 30);
 
+    // atmosphere = atmosphereGLSL();
+
     //Sun
     // sunTexture1 = new THREE.TextureLoader().load('assets/sun_dis.png');
     sunTexture2 = new THREE.TextureLoader().load('assets/sun.jpg');
@@ -412,6 +414,25 @@ function getEarth() {
 
     return sphere;
 }
+
+// import atmosphereVertexShader from '../shaders/atmosphereVertex.glsl'
+// import atmosphereFragmentShader from '../shaders/atmosphereFragment.glsl'
+
+// function atmosphereGLSL() {
+//     const atmosphereMesh = new THREE.Mesh(
+//         new THREE.SphereGeometry(1, 360, 360),
+//         new THREE.ShaderMaterial({
+//             vertexShader: atmosphereVertexShader,
+//             fragmentShader: atmosphereFragmentShader,
+//             blending: THREE.AdditiveBlending,
+//             side: THREE.BackSide
+//         })
+//     )
+//     atmosphereMesh.scale.set(1.1, 1.1, 1.1);
+//     scene.add(atmosphereMesh);
+
+//     return atmosphereMesh;
+// }
 
 // function getSun() {
 //     const geometry = new THREE.SphereGeometry(1, 360, 360);
