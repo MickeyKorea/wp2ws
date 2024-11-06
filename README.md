@@ -10,5 +10,5 @@ Repository for Web Page to Web Space Projects
 [Project B](https://mickeykorea.github.io/wp2ws/mickey-universe/)
 Celestial Odyssey: Mickey Universe
 
-[Project C](https://mickeykorea.github.io/wp2ws/Project_B_XR/)
+[Project C](https://mickeykorea.github.io/wp2ws/mickey-universe-xr/)
 Celestial Odyssey: Mickey Universe (XR Ver.)
