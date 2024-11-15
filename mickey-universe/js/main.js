@@ -1,3 +1,5 @@
+let loadingScreen = document.querySelector(".loadingScreen");
+
 const particlesData = [];
 let positions, colors;
 let particles;
@@ -264,6 +266,7 @@ function getIcosahedron() {
         // "https://cdn.glitch.me/b363d010-e028-4d9b-b0e2-29723bc75d28/space.hdr?v=1701258480859", //original
         () => {
             hdr.mapping = THREE.EquirectangularReflectionMapping;
+            loadingScreen.style.display = 'none';
         }
     );
     // hdr = new THREE.TextureLoader().load(

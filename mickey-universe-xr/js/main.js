@@ -1,3 +1,5 @@
+let loadingScreen = document.querySelector(".loadingScreen");
+
 const particlesData = [];
 let positions, colors;
 let particles;
@@ -7,27 +9,44 @@ let linesMesh;
 let group = new THREE.Group();
 
 const maxParticleCount = 1000;
-let particleCount = 50;
-const r = 650;
+let particleCount = 170;
+const r = 2000;
 const rHalf = r / 2;
 
 const effectController = {
     showDots: true,
     showLines: true,
-    minDistance: 130,
+    minDistance: 250,
     limitConnections: false,
     maxConnections: 20,
-    particleCount: 100
+    particleCount: 170
 };
 
 let lights = [];
-//texture for Earth and its displacement(to make it look more 3d)
 let bg, light;
-let earth, mars, moon, jupiter;
+
+let moon;
+let mercury, venus, earth, mars, jupiter, saturn, saturnRing, uranus, neptune;
+
 let earthTexture1, earthTexture2;
-let marsTexture1, marsTexture2;
 let moonTexture1, moonTexture2;
-let jupiterTexture1, jupiterTexture2;
+let mercuryTexture, venusTexture, marsTexture,
+    jupiterTexture, saturnTexture, saturnRingTexture,
+    uranusTexture, neptuneTexture;
+
+const ROTATION_SPEEDS = {
+    //EARTH_BASE: 0.002
+
+    // Other planets relative to Earth's rotation
+    // (EARTH_BASE * 24 hours / planet's day length)
+    MERCURY: 0.002 * (24 / (58.6 * 24)),      // 58.6 Earth days
+    VENUS: -0.002 * (24 / (243 * 24)),        // 243 Earth days (negative for retrograde)
+    MARS: 0.002 * (24 / 24.6),                // 24.6 hours
+    JUPITER: 0.002 * (24 / 9.9),              // 9.9 hours
+    SATURN: 0.002 * (24 / 10.7),              // 10.7 hours
+    URANUS: 0.002 * (24 / 17.2),              // 17.2 hours
+    NEPTUNE: 0.002 * (24 / 16.1)
+};
 
 class ConstellationBox {
     constructor() {
@@ -38,12 +57,11 @@ class ConstellationBox {
 
     setup() {
         // Starry background setup
-        //https://redstapler.co/space-warp-background-effect-three-js/
         for (let i = 0; i < 4000; i++) {
             let star = new THREE.Vector3(
-                Math.random() * 600 - 300,
-                Math.random() * 600 - 300,
-                Math.random() * 600 - 300
+                Math.random() * 3000 - 1000,
+                Math.random() * 3000 - 1000,
+                Math.random() * 3000 - 1000
             );
 
             // Random initial velocity between -0.01 and 0.01
@@ -68,7 +86,7 @@ class ConstellationBox {
         const sprite = new THREE.TextureLoader().load('assets/star.png');
         const starMaterial = new THREE.PointsMaterial({
             color: 0xaaaaaa,
-            size: 1,
+            size: 3.5,
             map: sprite
         });
 
@@ -84,9 +102,10 @@ class ConstellationBox {
             star.velocity += star.acceleration * star.direction;
             star.y -= star.velocity;
 
-            if (star.y < -500 || star.y > 500) {
+            if (star.y < -1000 || star.y > 1000) {
                 // Reset the star's position
-                star.y = Math.random() * 600 - 300;
+                // star.y = Math.random() * 600 - 300;
+                star.y = Math.random() * 2000 - 1000;
                 // Reset the star's velocity
                 star.velocity = (Math.random() - 0.5) * 0.02;
                 // Reset the star's acceleration
@@ -118,12 +137,12 @@ function setupThree() {
     // crate group to control the particles and lines together
 
     scene.add(group);
-    group.position.z = -350;
+    // group.position.z = -400;
 
     // point
     const pMaterial = new THREE.PointsMaterial({
         color: 0xFFFFFF,
-        size: 0.5,
+        size: 1,
         blending: THREE.AdditiveBlending,
         transparent: true,
         sizeAttenuation: false
@@ -133,9 +152,9 @@ function setupThree() {
     particlePositions = new Float32Array(maxParticleCount * 3);
 
     for (let i = 0; i < maxParticleCount; i++) {
-        const x = Math.random() * r - r / 2.5;
-        const y = Math.random() * r - r / 2.5;
-        const z = Math.random() * r - r / 2.5;
+        const x = Math.random() * r - r / 2;
+        const y = Math.random() * r - r / 2;
+        const z = Math.random() * r - r / 2;
 
         particlePositions[i * 3] = x;
         particlePositions[i * 3 + 1] = y;
@@ -173,22 +192,23 @@ function setupThree() {
         //have to use vertexColors here instead of just color here to use the color attribute
         vertexColors: true,
         blending: THREE.AdditiveBlending,
-        depthTest: false,
+        depthTest: true,
+        depthWrite: true,
         transparent: true
     });
 
     linesMesh = new THREE.LineSegments(geometry, material);
     group.add(linesMesh);
 
-    initGUI();
-    gui.close();
+    // initGUI();
+    // gui.close();
 
     //hdi background
     bg = getIcosahedron();
 
     //camera height gui
-    let cameraControls = gui.addFolder('Camera Position');
-    cameraControls.add(camera.position, 'z', 0, 1000).name('Height').listen().step(1);
+    // let cameraControls = gui.addFolder('Camera Position');
+    // cameraControls.add(camera.position, 'z', 0, 1000).name('Height').listen().step(1);
     // cameraControls.open();
 
     // lights
@@ -197,15 +217,37 @@ function setupThree() {
     scene.add(ambiLight);
 
     //ambient light gui
-    let folderAmbiLight = gui.addFolder("AmbientLight");
-    folderAmbiLight.add(ambiLight, "visible");
-    folderAmbiLight.add(ambiLight, "intensity", 0.0, 5.0);
-    folderAmbiLight.add(ambiLight.color, "r", 0.0, 1.0);
-    folderAmbiLight.add(ambiLight.color, "g", 0.0, 1.0);
-    folderAmbiLight.add(ambiLight.color, "b", 0.0, 1.0);
+    // let folderAmbiLight = gui.addFolder("AmbientLight");
+    // folderAmbiLight.add(ambiLight, "visible");
+    // folderAmbiLight.add(ambiLight, "intensity", 0.0, 5.0);
+    // folderAmbiLight.add(ambiLight.color, "r", 0.0, 1.0);
+    // folderAmbiLight.add(ambiLight.color, "g", 0.0, 1.0);
+    // folderAmbiLight.add(ambiLight.color, "b", 0.0, 1.0);
 
     light = getLight();
     light.position.set(0, 5, 10);
+
+    //Mercury
+    mercuryTexture = new THREE.TextureLoader().load('assets/mercury.jpg');
+    mercuryTexture.colorSpace = THREE.SRGBColorSpace;
+
+    mercury = getMercury();
+    mercury.scale.set(30, 30, 30);
+    mercury.position.x = -60;
+    mercury.position.y = 0;
+    mercury.position.z = 1220;
+    group.add(mercury);
+
+    //Venus
+    venusTexture = new THREE.TextureLoader().load('assets/venus.jpg');
+    venusTexture.colorSpace = THREE.SRGBColorSpace;
+
+    venus = getVenus();
+    venus.scale.set(30, 30, 30);
+    venus.position.x = -75;
+    venus.position.y = 10;
+    venus.position.z = 1100;
+    group.add(venus);
 
     //Earth
     earthTexture1 = new THREE.TextureLoader().load('assets/earth_dis.png');
@@ -215,7 +257,9 @@ function setupThree() {
 
     earth = getEarth();
     earth.scale.set(30, 30, 30);
-    earth.position.z = -300;
+    earth.position.x = -30;
+    earth.position.y = 33;
+    earth.position.z = 1000;
     group.add(earth);
 
     //Moon
@@ -229,54 +273,85 @@ function setupThree() {
     });
     const moon = new THREE.Mesh(moonGeometry, moonMaterial);
     earth.add(moon);
-    moon.position.x = 3;
+    moon.position.x = 1.5;
     moon.rotation.x += 0.001;
 
     //Mars
-    marsTexture2 = new THREE.TextureLoader().load('assets/mars.jpg');
-    marsTexture2.colorSpace = THREE.SRGBColorSpace;
+    marsTexture = new THREE.TextureLoader().load('assets/mars.jpg');
+    marsTexture.colorSpace = THREE.SRGBColorSpace;
 
     mars = getMars();
     mars.scale.set(30, 30, 30);
-    mars.position.x = 150;
-    mars.position.z = -300;
+    mars.position.x = -20;
+    mars.position.y = -50;
+    mars.position.z = 900;
     group.add(mars);
 
     //Junpiter
-    jupiterTexture2 = new THREE.TextureLoader().load('assets/jupiter.jpg');
-    jupiterTexture2.colorSpace = THREE.SRGBColorSpace;
+    jupiterTexture = new THREE.TextureLoader().load('assets/jupiter.jpg');
+    jupiterTexture.colorSpace = THREE.SRGBColorSpace;
 
     jupiter = getJupiter();
     jupiter.scale.set(30, 30, 30);
-    jupiter.position.x = -200;
-    jupiter.position.z = -1000;
+    jupiter.position.x = 350;
+    jupiter.position.y = 30;
+    jupiter.position.z = 600;
     group.add(jupiter);
+
+    //Saturn
+    saturnTexture = new THREE.TextureLoader().load('assets/saturn.jpg');
+    saturnRingTexture = new THREE.TextureLoader().load('assets/saturn_ring.png');
+    saturnTexture.colorSpace = THREE.SRGBColorSpace;
+    saturnRingTexture.colorSpace = THREE.SRGBColorSpace;
+
+    saturn = getSaturn();
+    saturn.scale.set(30, 30, 30);
+    saturn.position.x = 300;
+    saturn.position.y = 20;
+    saturn.position.z = 0;
+    group.add(saturn);
+
+    //Uranus
+    uranusTexture = new THREE.TextureLoader().load('assets/uranus.jpg');
+    uranusTexture.colorSpace = THREE.SRGBColorSpace;
+
+    uranus = getUranus();
+    uranus.scale.set(30, 30, 30);
+    uranus.position.x = -200;
+    uranus.position.y = -30;
+    uranus.position.z = -100;
+    group.add(uranus);
+
+    //Neptune
+    neptuneTexture = new THREE.TextureLoader().load('assets/neptune.jpg');
+    neptuneTexture.colorSpace = THREE.SRGBColorSpace;
+
+    neptune = getNeptune();
+    neptune.scale.set(30, 30, 30);
+    neptune.position.x = -500;
+    neptune.position.y = -80;
+    neptune.position.z = -230;
+    group.add(neptune);
 }
 
-//hdr background mappin
+//hdr background mapping
 let hdr;
 function getIcosahedron() {
     hdr = new RGBELoader().load(
-        // "./assets/space.hdr",
-        "https://cdn.glitch.me/d1258780-da78-4d7e-9961-a8cb9ca13efc/space.hdr?v=1729681032066",
-        // "https://cdn.glitch.me/b363d010-e028-4d9b-b0e2-29723bc75d28/space.hdr?v=1701258480859",
+        "./assets/space-xr.hdr",
+        // "https://cdn.glitch.me/d1258780-da78-4d7e-9961-a8cb9ca13efc/space-xr.hdr?v=1731657916851",
         () => {
             hdr.mapping = THREE.EquirectangularReflectionMapping;
+            loadingScreen.style.display = 'none';
         }
     );
 
-    const geometry = new THREE.IcosahedronGeometry(1, 0);
-    const material = new THREE.MeshPhysicalMaterial({
-        envMap: hdr
-    });
-    const mesh = new THREE.Mesh(geometry, material);
-    scene.add(mesh);
-
     scene.background = hdr;
+    return null;
 
     // let sphere = getSphere();
 
-    return mesh;
+    // return mesh;
 }
 
 let movementSpeed = 1;
@@ -292,28 +367,26 @@ function updateThree() {
         movementSpeed = lerp(movementSpeed, 1, 0.01);
     }
 
-    if (group && group.position.z <= 400) {
-        group.position.z += (movementSpeed ** 2) * 0.0001;
-        // console.log(group.position.z);
+    // Controller movement
+    let speed = Math.abs(movementSpeed) ** 1.75;
+
+    if (group && group.position.z <= 1900) {
+        group.position.z += speed * 0.0001;
     } else {
         if (movementSpeed > 0) {
             movementSpeed *= -1;
         }
-        group.position.z += (movementSpeed ** 2) * 0.0001;
-        console.log(group.position.z);
+        group.position.z += speed * 0.0001;
     }
 
-    if (group.position.z >= 400) {
-        //reverse the direction of the movement
+    if (group.position.z >= 1900) {
         movementSpeed *= -1;
-        // group.position.z -= (movementSpeed ** 2) * 0.01;
-        group.position.z = -420;
+        group.position.z = -600;
     }
-    // console.log(group.position.z);
 
     //wiggle effect
-    group.rotation.z = sin(frame * 0.01) * 0.1;
-    group.rotation.y = sin(frame * 0.015) * 0.05;
+    group.rotation.z = sin(frame * 0.01) * 0.01;
+    group.rotation.y = sin(frame * 0.015) * 0.01;
 
     for (let l of lights) {
         // l.move();
@@ -324,6 +397,8 @@ function updateThree() {
     earth.rotation.z += 0.002;
     earth.rotateY(0.002);
     // moon.rotation.x += 0.001;
+
+    updatePlanetRotations();
 
     let vertexpos = 0;
     let colorpos = 0;
@@ -405,15 +480,32 @@ function updateThree() {
     pointCloud.geometry.attributes.position.needsUpdate = true;
 }
 
+//planet models
+function getMercury() {
+    const geometry = new THREE.SphereGeometry(0.2, 360, 360);
+    const material = new THREE.MeshStandardMaterial({
+        side: THREE.DoubleSide,
+        map: mercuryTexture,
+    });
+    const sphere = new THREE.Mesh(geometry, material);
+    scene.add(sphere);
+    return sphere;
+}
+
+function getVenus() {
+    const geometry = new THREE.SphereGeometry(0.949, 360, 360);
+    const material = new THREE.MeshStandardMaterial({
+        side: THREE.DoubleSide,
+        map: venusTexture,
+    });
+    const sphere = new THREE.Mesh(geometry, material);
+    scene.add(sphere);
+    return sphere;
+
+}
+
 function getEarth() {
     const geometry = new THREE.SphereGeometry(1, 360, 360);
-
-    //refelction mapping for hdr background
-    // const material = new THREE.MeshBasicMaterial({
-    //     color: 0xffffff,
-    //     envMap: hdr
-    // });
-
     //earth displacement mapping
     const material = new THREE.MeshStandardMaterial({
         side: THREE.DoubleSide,
@@ -432,7 +524,7 @@ function getMars() {
     //mars displacement mapping
     const material = new THREE.MeshStandardMaterial({
         side: THREE.DoubleSide,
-        map: marsTexture2,
+        map: marsTexture,
     });
     const sphere = new THREE.Mesh(geometry, material);
     scene.add(sphere);
@@ -444,11 +536,80 @@ function getJupiter() {
 
     const material = new THREE.MeshStandardMaterial({
         side: THREE.DoubleSide,
-        map: jupiterTexture2,
+        map: jupiterTexture,
     });
     const sphere = new THREE.Mesh(geometry, material);
     scene.add(sphere);
     return sphere;
+}
+
+function getSaturn() {
+    const geometry = new THREE.SphereGeometry(7, 360, 360);
+    const material = new THREE.MeshStandardMaterial({
+        side: THREE.DoubleSide,
+        map: saturnTexture,
+    });
+    const sphere = new THREE.Mesh(geometry, material);
+
+    saturnRingTexture.wrapS = THREE.RepeatWrapping;
+    saturnRingTexture.wrapT = THREE.RepeatWrapping;
+    saturnRingTexture.repeat.set(4, 1);
+
+    // Add Saturn's rings
+    const ringGeometry = new THREE.TorusGeometry(10, 1, 3, 128);
+    const ringMaterial = new THREE.MeshStandardMaterial({
+        side: THREE.DoubleSide,
+        map: saturnRingTexture,
+        color: 0xffffff,
+        transparent: false,
+        depthWrite: true,
+        depthTest: true,
+        blending: THREE.AdditiveBlending
+    });
+    saturnRing = new THREE.Mesh(ringGeometry, ringMaterial);
+    sphere.add(saturnRing);
+    saturnRing.rotation.x = Math.PI / 2.5;
+    saturnRing.rotation.y = Math.PI / 1.2;
+    saturnRing.position.z = 0.01;
+
+    scene.add(sphere);
+    return sphere;
+}
+
+function getUranus() {
+    const geometry = new THREE.SphereGeometry(4.007, 360, 360);
+    const material = new THREE.MeshStandardMaterial({
+        side: THREE.DoubleSide,
+        map: uranusTexture,
+    });
+    const sphere = new THREE.Mesh(geometry, material);
+    scene.add(sphere);
+    return sphere;
+}
+
+function getNeptune() {
+    const geometry = new THREE.SphereGeometry(3.883, 360, 360);
+    const material = new THREE.MeshStandardMaterial({
+        side: THREE.DoubleSide,
+        map: neptuneTexture,
+    });
+    const sphere = new THREE.Mesh(geometry, material);
+    scene.add(sphere);
+    return sphere;
+}
+
+function updatePlanetRotations() {
+    mercury.rotateY(ROTATION_SPEEDS.MERCURY);
+    venus.rotateY(ROTATION_SPEEDS.VENUS);
+    mars.rotateY(ROTATION_SPEEDS.MARS);
+    jupiter.rotateY(ROTATION_SPEEDS.JUPITER);
+    saturn.rotateY(ROTATION_SPEEDS.SATURN);
+
+    // Uranus (tilted rotation)
+    uranus.rotation.x = Math.PI / 2;  // 98-degree tilt
+    uranus.rotateY(ROTATION_SPEEDS.URANUS);
+
+    neptune.rotateY(ROTATION_SPEEDS.NEPTUNE);
 }
 
 function getLight() {
@@ -457,25 +618,25 @@ function getLight() {
     return light;
 }
 
-function initGUI() {
-    let folderStars = gui.addFolder("Constellation");
+// function initGUI() {
+//     let folderStars = gui.addFolder("Constellation");
 
-    folderStars.add(effectController, 'showDots').name('Show Stars').onChange(function (value) {
-        pointCloud.visible = value;
-    });
-    folderStars.add(effectController, 'showLines').name('Show Lines').onChange(function (value) {
-        linesMesh.visible = value;
+//     folderStars.add(effectController, 'showDots').name('Show Stars').onChange(function (value) {
+//         pointCloud.visible = value;
+//     });
+//     folderStars.add(effectController, 'showLines').name('Show Lines').onChange(function (value) {
+//         linesMesh.visible = value;
 
-    });
-    folderStars.add(effectController, 'minDistance', 10, 300).name('Min Distance');
-    folderStars.add(effectController, 'limitConnections').name('Limit Connections');
-    folderStars.add(effectController, 'maxConnections', 0, 30, 1).name('Max Connections');
-    folderStars.add(effectController, 'particleCount', 0, maxParticleCount, 1).name('Particle Count').onChange(function (value) {
-        particleCount = value;
-        particles.setDrawRange(0, particleCount);
-    });
-    // folderStars.open();
-}
+//     });
+//     folderStars.add(effectController, 'minDistance', 10, 300).name('Min Distance');
+//     folderStars.add(effectController, 'limitConnections').name('Limit Connections');
+//     folderStars.add(effectController, 'maxConnections', 0, 30, 1).name('Max Connections');
+//     folderStars.add(effectController, 'particleCount', 0, maxParticleCount, 1).name('Particle Count').onChange(function (value) {
+//         particleCount = value;
+//         particles.setDrawRange(0, particleCount);
+//     });
+//     // folderStars.open();
+// }
 
 
 //WEB XR

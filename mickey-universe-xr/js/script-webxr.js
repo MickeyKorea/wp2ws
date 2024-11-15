@@ -9,13 +9,13 @@ function setupWebXR() {
   controller1 = renderer.xr.getController(0);
   controller1.addEventListener('selectstart', onSelectStart); // when the trigger is pressed
   controller1.addEventListener('selectend', onSelectEnd); // when the trigger is released
-  controller1.addEventListener("axischange", onAxisChange); // when the joystick is moved
+  //controller1.addEventListener("axischange", onAxisChange); // when the joystick is moved
   scene.add(controller1);
 
   controller2 = renderer.xr.getController(1);
   controller2.addEventListener('selectstart', onSelectStart);
   controller2.addEventListener('selectend', onSelectEnd);
-  controller2.addEventListener("axischange", onAxisChange);
+  //controller2.addEventListener("axischange", onAxisChange);
   scene.add(controller2);
 
   // controller grip
@@ -29,8 +29,27 @@ function setupWebXR() {
   controllerGrip2.add(controllerModelFactory.createControllerModel(controllerGrip2));
   scene.add(controllerGrip2);
 
-  // display the XR Button
-  document.body.appendChild(XRButton.createButton(renderer));
+
+  renderer.xr.enabled = true;
+  // Create the XR button but don't append it yet
+  const xrButton = XRButton.createButton(renderer);
+
+  // Check if loading screen is already hidden
+  if (loadingScreen.style.display === 'none') {
+    document.body.appendChild(xrButton);
+  } else {
+    // Add an observer to watch for the loading screen being hidden
+    const observer = new MutationObserver((mutations) => {
+      mutations.forEach((mutation) => {
+        if (mutation.target.style.display === 'none') {
+          document.body.appendChild(xrButton);
+          observer.disconnect();
+        }
+      });
+    });
+
+    observer.observe(loadingScreen, { attributes: true, attributeFilter: ['style'] });
+  }
 
   // controllers and raycaster
   const geometry = new THREE.BufferGeometry().setFromPoints([new THREE.Vector3(0, 0, 0), new THREE.Vector3(0, 0, - 1)]);
@@ -103,26 +122,26 @@ function onSelectEnd(event) {
 
 }
 
-function onAxisChange(event) {
-  // Check if the axis change is on the joystick
-  const joystickThreshold = 0.5;
-  const xAxis = event.axes[2]; // X-axis of the joystick
-  const yAxis = event.axes[3]; // Y-axis of the joystick
+// function onAxisChange(event) {
+//   // Check if the axis change is on the joystick
+//   const joystickThreshold = 0.5;
+//   const xAxis = event.axes[2]; // X-axis of the joystick
+//   const yAxis = event.axes[3]; // Y-axis of the joystick
 
-  // Check if the joystick is moved beyond the threshold
-  if (Math.abs(xAxis) > joystickThreshold || Math.abs(yAxis) > joystickThreshold) {
-    // Determine the direction based on the joystick position
-    if (xAxis > joystickThreshold) {
-      // Joystick moved right
-    } else if (xAxis < -joystickThreshold) {
-      // Joystick moved left
-    }
+//   // Check if the joystick is moved beyond the threshold
+//   if (Math.abs(xAxis) > joystickThreshold || Math.abs(yAxis) > joystickThreshold) {
+//     // Determine the direction based on the joystick position
+//     if (xAxis > joystickThreshold) {
+//       // Joystick moved right
+//     } else if (xAxis < -joystickThreshold) {
+//       // Joystick moved left
+//     }
 
-    if (yAxis > joystickThreshold) {
-      // Joystick moved down
-    } else if (yAxis < -joystickThreshold) {
-      // Joystick moved up
-      text_rotate = true;
-    }
-  }
-}
+//     if (yAxis > joystickThreshold) {
+//       // Joystick moved down
+//     } else if (yAxis < -joystickThreshold) {
+//       // Joystick moved up
+//       text_rotate = true;
+//     }
+//   }
+// }

@@ -23,6 +23,9 @@ function initThree() {
     container.appendChild(renderer.domElement);
 
     controls = new OrbitControls(camera, renderer.domElement);
+    controls.enableDamping = true;
+    controls.dampingFactor = 0.05;
+    controls.screenSpacePanning = false;
     controls.minDistance = 70;  // Prevent getting inside the Earth
     controls.maxDistance = 400; // Limit how far out the user can zoom
 
