@@ -74,9 +74,12 @@ function setupWebXR() {
 
   // // Set initial VR camera position
   renderer.xr.addEventListener('sessionstart', () => {
-    const position = new THREE.Vector3(0, 50, 2000);  // Match with desktop camera
+    const position = new THREE.Vector3(0, 50, 2500);  // Match with desktop camera
     const orientation = new THREE.Quaternion();
     orientation.setFromEuler(new THREE.Euler(-0.2, 0, 0));  // Slight downward tilt
+
+    // Reset group position when entering VR
+    group.position.set(0, 0, 0);  // Reset group to origin
 
     renderer.xr.setReferenceSpaceType('local');
     renderer.xr.getReferenceSpace().then((referenceSpace) => {
