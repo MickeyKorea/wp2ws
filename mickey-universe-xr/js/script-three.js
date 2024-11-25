@@ -14,7 +14,6 @@ function initThree() {
     const far = 3000;
     camera = new THREE.PerspectiveCamera(fov, aspectRatio, near, far);
     camera.position.z = 1300;
-    camera.rotation.x = Math.PI / 2;
 
     renderer = new THREE.WebGLRenderer();
     renderer.setSize(window.innerWidth, window.innerHeight);
@@ -22,13 +21,13 @@ function initThree() {
     container = document.getElementById("container-three");
     container.appendChild(renderer.domElement);
 
-    controls = new OrbitControls(camera, renderer.domElement);
-    controls.enableDamping = true;
-    controls.dampingFactor = 0.05;
-    controls.screenSpacePanning = false;
-    controls.minDistance = 1;
-    controls.maxDistance = 3000;  // Match with far plane
-    controls.maxPolarAngle = Math.PI;
+    // controls = new OrbitControls(camera, renderer.domElement);
+    // controls.enableDamping = true;
+    // controls.dampingFactor = 0.05;
+    // controls.screenSpacePanning = false;
+    // controls.minDistance = 1;
+    // controls.maxDistance = 3000;  // Match with far plane
+    // controls.maxPolarAngle = Math.PI;
 
     //gui = new dat.GUI();
 
@@ -48,7 +47,7 @@ function animate() {
     time = performance.now();
     frame++;
 
-    controls.update();
+    //controls.update();
     updateThree();
 
     renderer.render(scene, camera);

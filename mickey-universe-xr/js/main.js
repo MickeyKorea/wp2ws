@@ -48,6 +48,11 @@ const ROTATION_SPEEDS = {
     NEPTUNE: 0.002 * (24 / 16.1)
 };
 
+const SPEED_MULTIPLIER = {
+    VR: 3,
+    DESKTOP: 1
+};
+
 class ConstellationBox {
     constructor() {
         this.stars = null;
@@ -235,7 +240,7 @@ function setupThree() {
     mercury.scale.set(30, 30, 30);
     mercury.position.x = -60;
     mercury.position.y = 0;
-    mercury.position.z = 1220;
+    mercury.position.z = 1200;
     group.add(mercury);
 
     //Venus
@@ -356,6 +361,7 @@ function getIcosahedron() {
 }
 
 let movementSpeed = 1;
+let isInVR = false;
 
 function updateThree() {
     constellationBox.update();
@@ -370,6 +376,7 @@ function updateThree() {
 
     // Controller movement
     let speed = Math.abs(movementSpeed) ** 1.75;
+    speed *= isInVR ? SPEED_MULTIPLIER.VR : SPEED_MULTIPLIER.DESKTOP;
 
     if (group && group.position.z <= 1900) {
         group.position.z += speed * 0.0001;

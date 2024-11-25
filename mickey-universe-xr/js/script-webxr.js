@@ -5,6 +5,15 @@ let triggerPressed = false;
 function setupWebXR() {
   renderer.xr.enabled = true;
 
+  // Add VR session state tracking
+  renderer.xr.addEventListener('sessionstart', () => {
+    isInVR = true;
+  });
+
+  renderer.xr.addEventListener('sessionend', () => {
+    isInVR = false;
+  });
+
   // controller 
   controller1 = renderer.xr.getController(0);
   controller1.addEventListener('selectstart', onSelectStart); // when the trigger is pressed
@@ -63,12 +72,11 @@ function setupWebXR() {
 
   raycaster = new THREE.Raycaster();
 
-  // Set initial VR camera position
+  // // Set initial VR camera position
   renderer.xr.addEventListener('sessionstart', () => {
-    // Adjust these values to set the initial VR position
-    const position = new THREE.Vector3(0, 0, 1400);
+    const position = new THREE.Vector3(0, 50, 2000);  // Match with desktop camera
     const orientation = new THREE.Quaternion();
-    orientation.setFromEuler(new THREE.Euler(-0.2, 0, 0));
+    orientation.setFromEuler(new THREE.Euler(-0.2, 0, 0));  // Slight downward tilt
 
     renderer.xr.setReferenceSpaceType('local');
     renderer.xr.getReferenceSpace().then((referenceSpace) => {
