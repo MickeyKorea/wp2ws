@@ -62,6 +62,23 @@ function setupWebXR() {
   controller2.add(line.clone());
 
   raycaster = new THREE.Raycaster();
+
+  // Set initial VR camera position
+  renderer.xr.addEventListener('sessionstart', () => {
+    // Adjust these values to set the initial VR position
+    const position = new THREE.Vector3(0, 0, 1400);
+    const orientation = new THREE.Quaternion();
+    orientation.setFromEuler(new THREE.Euler(-0.2, 0, 0));
+
+    renderer.xr.setReferenceSpaceType('local');
+    renderer.xr.getReferenceSpace().then((referenceSpace) => {
+      const transform = new XRRigidTransform(
+        { x: position.x, y: position.y, z: position.z },
+        { x: orientation.x, y: orientation.y, z: orientation.z, w: orientation.w }
+      );
+      renderer.xr.setReferenceSpace(referenceSpace.getOffsetReferenceSpace(transform));
+    });
+  });
 }
 
 document.addEventListener('keydown', function (event) {
